@@ -4,10 +4,16 @@ import sys
 
 class WatchSeries(scrapy.Spider):
     name = 'watchseries'
-    series = 'the_series'
-    season = '1'
-    episode = '1'
-    start_urls = ['http://ewatchseries.to/episode/'+ series +'_' + 's' + season + '_e' + episode + '.html']
+
+    def __init__(self, *args, **kwargs):
+        series = kwargs.pop('series', []) 
+        season = kwargs.pop('season', []) 
+        episode = kwargs.pop('episode', []) 
+        self.season = season
+        self.episode = episode
+        self.start_urls = ['http://ewatchseries.to/episode/'+ series +'_' + 's' + season + '_e' + episode + '.html']
+        self.logger.info(self.start_urls)
+        super(WatchSeries, self).__init__(*args, **kwargs)
 
     def parse(self, response):
         for title in response.xpath("//a[contains(@onclick, '.me/')]").extract():
